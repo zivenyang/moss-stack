@@ -1,0 +1,38 @@
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from app.config import settings
+from app.shared.infrastructure.db.session import async_engine
+from app.features.auth.api import router as auth_router
+from app.features.item.api import router as item_router
+
+# --- 生命周期事件 (Lifespan Events) ---
+# 推荐使用 lifespan 而不是旧的 @app.on_event("startup")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
+    print("--- Starting up Application ---")
+    # 这里可以添加一些启动时检查，比如尝试连接数据库
+    yield
+    # Shutdown logic
+    print("--- Shutting down Application ---")
+    await async_engine.dispose()
+
+# --- 创建 FastAPI 应用实例 ---
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    lifespan=lifespan,
+    # You can add other metadata like version, description, etc.
+)
+
+# --- 健康检查端点 ---
+@app.get("/health", tags=["Health Check"])
+async def health_check():
+    return {"status": "ok"}
+
+# --- 包含功能模块的路由 ---
+app.include_router(auth_router, prefix=settings.API_V1_STR, tags=["Authentication"])
+app.include_router(item_router, prefix=settings.API_V1_STR, tags=["Item"])
+
+# --- (可选) 添加全局中间件 ---
+# from app.shared.web.middleware import ExceptionHandlingMiddleware
+# app.add_middleware(ExceptionHandlingMiddleware)
