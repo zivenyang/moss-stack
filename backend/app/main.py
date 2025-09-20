@@ -4,13 +4,15 @@ from app.config import settings
 from app.shared.infrastructure.db.session import async_engine
 from app.features.auth.api import router as auth_router
 from app.features.item.api import router as item_router
-from app.shared.web.middleware import ExceptionHandlingMiddleware
+from app.shared.web.middleware import ExceptionHandlingMiddleware, LoggingContextMiddleware 
+from app.shared.infrastructure.logging.config import setup_logging
 
 # --- 生命周期事件 (Lifespan Events) ---
 # 推荐使用 lifespan 而不是旧的 @app.on_event("startup")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup logic
+    setup_logging()
     print("--- Starting up Application ---")
     # 这里可以添加一些启动时检查，比如尝试连接数据库
     yield
@@ -36,3 +38,4 @@ app.include_router(item_router, prefix=settings.API_V1_STR, tags=["Item"])
 
 # --- 添加全局中间件 ---
 app.add_middleware(ExceptionHandlingMiddleware)
+app.add_middleware(LoggingContextMiddleware)

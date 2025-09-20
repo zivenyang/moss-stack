@@ -15,6 +15,7 @@ dependencies = [
     "pydantic-settings",
     "python-jose[cryptography]",
     "passlib[bcrypt]",
+    "structlog>=25.4.0",
 ]
 
 [project.optional-dependencies]
