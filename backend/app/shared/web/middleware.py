@@ -29,7 +29,7 @@ class ExceptionHandlingMiddleware(BaseHTTPMiddleware):
             # logger.exception("An unexpected error occurred")
             return JSONResponse(
                 status_code=500,
-                content={"detail": "An internal server error occurred."}
+                content={"detail": f"An internal server error occurred: {e}"}
             )
 
 class LoggingContextMiddleware(BaseHTTPMiddleware):

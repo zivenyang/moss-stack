@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
 
     # Database settings
-    DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/app"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:changethis@localhost:5432/moss"
     DB_ECHO: bool = False # Set to True for debugging SQL queries
 
     # JWT settings

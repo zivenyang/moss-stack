@@ -804,6 +804,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "alembic" },
     { name = "asyncpg" },
+    { name = "bcrypt" },
     { name = "celery" },
     { name = "fastapi", extra = ["standard"] },
     { name = "greenlet" },
@@ -833,6 +834,7 @@ dev = [
 requires-dist = [
     { name = "alembic" },
     { name = "asyncpg" },
+    { name = "bcrypt", specifier = ">=4.3.0" },
     { name = "celery" },
     { name = "factory-boy", marker = "extra == 'dev'" },
     { name = "fastapi", extras = ["standard"] },
