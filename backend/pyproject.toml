@@ -1,0 +1,31 @@
+[project]
+name = "moss-stack-backend"
+version = "0.1.0"
+description = "Backend for the Legal Proofreader application."
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlmodel",
+    "asyncpg",
+    "greenlet",
+    "alembic",
+    "celery",
+    "redis",
+    "pydantic-settings",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "httpx",
+    "factory-boy",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff",
+    "mypy",
+]

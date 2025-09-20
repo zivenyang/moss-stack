@@ -1,0 +1,32 @@
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+dist/
+build/
+.npm/
+pnpm-lock.yaml
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+venv/
+env/
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
