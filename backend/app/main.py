@@ -4,6 +4,7 @@ from app.config import settings
 from app.shared.infrastructure.db.session import async_engine
 from app.features.auth.api import router as auth_router
 from app.features.item.api import router as item_router
+from app.shared.web.middleware import ExceptionHandlingMiddleware
 
 # --- 生命周期事件 (Lifespan Events) ---
 # 推荐使用 lifespan 而不是旧的 @app.on_event("startup")
@@ -33,6 +34,5 @@ async def health_check():
 app.include_router(auth_router, prefix=settings.API_V1_STR, tags=["Authentication"])
 app.include_router(item_router, prefix=settings.API_V1_STR, tags=["Item"])
 
-# --- (可选) 添加全局中间件 ---
-# from app.shared.web.middleware import ExceptionHandlingMiddleware
-# app.add_middleware(ExceptionHandlingMiddleware)
+# --- 添加全局中间件 ---
+app.add_middleware(ExceptionHandlingMiddleware)
