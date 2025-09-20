@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import BaseModel, Field
 
 class DomainEvent(BaseModel):
@@ -10,4 +10,4 @@ class DomainEvent(BaseModel):
     to business experts.
     """
     event_id: uuid.UUID = Field(default_factory=uuid.uuid4)
-    occurred_on: datetime = Field(default_factory=datetime.utcnow)
+    occurred_on: datetime = Field(default_factory=datetime.now(timezone.utc))

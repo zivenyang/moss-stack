@@ -1,6 +1,8 @@
 class ApplicationError(Exception):
     """Base class for exceptions in the application layer."""
-    pass
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(self.message)
 
 class AuthorizationError(ApplicationError):
     """Raised when a user is not authorized to perform an action."""

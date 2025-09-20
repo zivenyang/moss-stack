@@ -1,6 +1,8 @@
 class DomainError(Exception):
     """Base class for exceptions in the domain layer."""
-    pass
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(self.message)
 
 class BusinessRuleViolationError(DomainError):
     """
