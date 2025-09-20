@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm 
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.shared.infrastructure.db.session import get_db_session
 from .domain.user import UserCreate, UserPublic
-from .schemas import LoginRequest, Token
+from .schemas import Token
 from .commands.register_user import RegisterUserCommand, RegisterUserHandler
 from .commands.login_user import LoginUserCommand, LoginUserHandler
 
@@ -28,13 +29,16 @@ async def register_user(
 
 @router.post("/login/access-token", response_model=Token)
 async def login_for_access_token(
-    login_data: LoginRequest,
+    form_data: OAuth2PasswordRequestForm = Depends(), 
     session: AsyncSession = Depends(get_db_session)
 ):
     """
     OAuth2 compatible token login, get an access token for future requests.
     """
-    command = LoginUserCommand(login_data=login_data)
+    command = LoginUserCommand(
+        username=form_data.username, 
+        password=form_data.password
+    )
     handler = LoginUserHandler(session)
     result = await handler.handle(command)
 
