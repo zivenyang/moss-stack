@@ -6,6 +6,7 @@ from app.shared.infrastructure.uow import IUnitOfWork
 from app.features.iam.application.admin.queries.get_user_list import GetUserListAdminHandler, GetUserListAdminQuery
 from app.features.iam.application.admin.queries.get_user_by_id import GetUserByIdAdminHandler, GetUserByIdAdminQuery
 from app.shared.application.exceptions import ResourceNotFoundError
+from app.shared.schemas import PageParams, Paginated
 from ..domain.user import User
 from ..schemas import UserInDBAdmin, UserUpdateAdmin, UserPublic
 from ..application.admin.commands.update_user import UpdateUserAdminCommand, UpdateUserAdminHandler
@@ -13,16 +14,16 @@ from ..application.admin.commands.delete_user import DeleteUserAdminCommand, Del
 
 router = APIRouter()
 
-@router.get("/", response_model=List[UserInDBAdmin])
+@router.get("/", response_model=Paginated[UserInDBAdmin])
 async def read_users_admin(
-    skip: int = 0, limit: int = 100,
+    pagination: PageParams = Depends(), # <-- 使用分页依赖
     uow: IUnitOfWork = Depends(get_uow),
     current_user: User = Depends(get_current_active_superuser),
 ):
     """
-    Retrieve all users (for admins).
+    Retrieve a paginated list of all users. (Admin access required)
     """
-    query = GetUserListAdminQuery(skip=skip, limit=limit)
+    query = GetUserListAdminQuery(page_params=pagination)
     handler = GetUserListAdminHandler(uow)
     return await handler.handle(query)
 

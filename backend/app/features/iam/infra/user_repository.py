@@ -1,6 +1,6 @@
 import uuid
-from typing import List, Optional
-from sqlmodel import select
+from typing import List, Optional, Tuple
+from sqlmodel import func, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from ..domain.user import User
 from ..schemas import UserCreate, UserUpdateAdmin, UserUpdateProfile
@@ -38,9 +38,26 @@ class UserRepository:
         self.session.add(db_user)
         return db_user
     
-    async def get_multi(self, skip: int = 0, limit: int = 100) -> List[User]:
-        statement = select(User).offset(skip).limit(limit)
-        return (await self.session.exec(statement)).all()
+    async def get_multi_paginated(
+        self, skip: int = 0, limit: int = 100
+    ) -> Tuple[List[User], int]:
+        """
+        Gets a paginated list of all users and the total count.
+        """
+        # Query for the data
+        data_statement = (
+            select(User)
+            .order_by(User.username) # Use a consistent order
+            .offset(skip)
+            .limit(limit)
+        )
+        items = (await self.session.exec(data_statement)).all()
+        
+        # Query for the total count
+        count_statement = select(func.count()).select_from(User)
+        total = (await self.session.exec(count_statement)).one()
+        
+        return items, total
 
     async def remove(self, db_user: User) -> None:
         # 删除用户时，也应该级联删除其所有 Identities

@@ -1,21 +1,32 @@
-from typing import List
 from pydantic import BaseModel
 from app.shared.infrastructure.uow import IUnitOfWork
+from app.shared.schemas import Paginated, PageParams
 from app.features.iam.schemas import UserInDBAdmin
 from app.features.iam.infra.user_repository import UserRepository
 
 class GetUserListAdminQuery(BaseModel):
-    skip: int = 0
-    limit: int = 100
+    page_params: PageParams
 
 class GetUserListAdminHandler:
     def __init__(self, uow: IUnitOfWork):
         self.uow = uow
 
-    async def handle(self, query: GetUserListAdminQuery) -> List[UserInDBAdmin]:
-        # 对于只读操作，使用事务不是必须的，但通过UoW获取session可以保持一致性
+    async def handle(self, query: GetUserListAdminQuery) -> Paginated[UserInDBAdmin]:
+        users_from_db = []
+        total_count = 0
+        
         async with self.uow:
             repo = self.uow.get_repository(UserRepository)
-            users = await repo.get_multi(skip=query.skip, limit=query.limit)
-            # 转换为DTO
-            return [UserInDBAdmin.model_validate(user) for user in users]
+            users_from_db, total_count = await repo.get_multi_paginated(
+                skip=query.page_params.offset,
+                limit=query.page_params.size
+            )
+        
+        # --- Post-transaction processing ---
+        user_dtos = [UserInDBAdmin.model_validate(user) for user in users_from_db]
+        
+        return Paginated.create(
+            items=user_dtos,
+            total=total_count,
+            params=query.page_params
+        )

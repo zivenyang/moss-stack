@@ -8,19 +8,23 @@ from app.features.item.application.admin.commands.delete_item import DeleteItemA
 from app.features.item.application.admin.commands.update_item import UpdateItemAdminCommand, UpdateItemAdminHandler
 from app.shared.application.exceptions import ResourceNotFoundError
 from app.features.item.application.admin.queries.get_item_by_id import GetItemByIdAdminHandler, GetItemByIdAdminQuery
+from app.shared.schemas import PageParams, Paginated
 
 from ..schemas import ItemPublic, ItemUpdateAdmin
 from app.features.item.application.admin.queries.get_all_items import GetAllItemsAdminQuery, GetAllItemsAdminHandler
 
 router = APIRouter()
 
-@router.get("/", response_model=List[ItemPublic])
+@router.get("/", response_model=Paginated[ItemPublic])
 async def read_items_admin(
-    skip: int = 0, limit: int = 100,
+    pagination: PageParams = Depends(),
     uow: IUnitOfWork = Depends(get_uow),
     current_user: User = Depends(get_current_active_superuser),
 ):
-    query = GetAllItemsAdminQuery(skip=skip, limit=limit)
+    """
+    Retrieve a paginated list of all items in the system. (Admin access required)
+    """
+    query = GetAllItemsAdminQuery(page_params=pagination)
     handler = GetAllItemsAdminHandler(uow)
     return await handler.handle(query)
 
