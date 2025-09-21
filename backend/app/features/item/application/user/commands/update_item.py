@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.shared.application.result import Result
 from app.shared.application.exceptions import ResourceNotFoundError
-from ..domain.item import ItemUpdate, ItemPublic
-from ..infra.item_repository import ItemRepository
+from app.features.item.domain.item import ItemUpdate, ItemPublic
+from app.features.item.infra.item_repository import ItemRepository
 
 class UpdateItemCommand(BaseModel):
     item_id: uuid.UUID

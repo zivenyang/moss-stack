@@ -7,10 +7,9 @@ from app.features.iam.domain.user import User
 from app.features.item.application.user.queries.get_item_by_id import GetItemByIdHandler, GetItemByIdQuery
 from app.shared.application.exceptions import ResourceNotFoundError
 
-from ..schemas import ItemCreate, ItemPublic, ItemUpdate
+from ..schemas import ItemCreate, ItemPublic
 from ..application.user.commands.create_item import CreateItemCommand, CreateItemHandler
 from ..application.user.queries.get_item_list import GetItemListQuery, GetItemListHandler
-# ... import update/delete user handlers
 
 router = APIRouter()
 
