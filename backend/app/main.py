@@ -7,7 +7,6 @@ from app.features.iam.api.user_router import router as user_router
 from app.features.iam.api.admin_router import router as admin_user_router
 from app.features.item.api.user_router import router as item_user_router 
 from app.features.item.api.admin_router import router as item_admin_router 
-from app.features.item.api import router as item_router
 from app.shared.web.middleware import ExceptionHandlingMiddleware, LoggingContextMiddleware 
 from app.shared.infrastructure.logging.config import setup_logging
 
@@ -40,7 +39,6 @@ async def health_check():
 app.include_router(auth_router, prefix=settings.API_V1_STR, tags=["IAM - Authentication"])
 app.include_router(user_router, prefix=f"{settings.API_V1_STR}/users", tags=["IAM - Users"])
 app.include_router(admin_user_router, prefix=f"{settings.API_V1_STR}/admin/users", tags=["IAM - Admin"])
-app.include_router(item_router, prefix=f"{settings.API_V1_STR}/items", tags=["Item"])
 
 app.include_router(item_user_router, prefix=f"{settings.API_V1_STR}/items", tags=["Items"])
 app.include_router(item_admin_router, prefix=f"{settings.API_V1_STR}/admin/items", tags=["Admin - Items"])

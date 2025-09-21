@@ -2,7 +2,8 @@ import uuid
 from typing import List, Optional, Tuple
 from sqlmodel import select, func
 from sqlmodel.ext.asyncio.session import AsyncSession
-from ..domain.item import Item, ItemCreate, ItemUpdate
+from ..domain.item import Item
+from ..schemas import ItemCreate, ItemUpdate
 
 class ItemRepository:
     def __init__(self, session: AsyncSession):
