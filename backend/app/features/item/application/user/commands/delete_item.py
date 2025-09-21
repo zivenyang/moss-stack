@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.shared.application.result import Result
 from app.shared.application.exceptions import ResourceNotFoundError
-from ..infra.item_repository import ItemRepository
+from app.features.item.infra.item_repository import ItemRepository
 
 class DeleteItemCommand(BaseModel):
     item_id: uuid.UUID

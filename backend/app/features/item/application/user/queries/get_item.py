@@ -1,8 +1,8 @@
 import uuid
 from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
-from ..domain.item import ItemPublic
-from ..infra.item_repository import ItemRepository
+from app.features.item.domain.item import ItemPublic
+from app.features.item.infra.item_repository import ItemRepository
 
 class GetItemQuery(BaseModel):
     owner_id: uuid.UUID
