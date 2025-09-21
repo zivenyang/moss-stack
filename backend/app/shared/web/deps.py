@@ -74,4 +74,6 @@ def get_uow() -> IUnitOfWork:
 
 def get_file_storage() -> IFileStorage:
     """Dependency to get a file storage instance."""
-    return LocalFileStorage(base_path=settings.STATIC_FILES_PATH, base_url=settings.STATIC_URL)
+    return LocalFileStorage(
+        base_path=settings.STATIC_FILES_PATH, base_url=settings.STATIC_URL
+    )

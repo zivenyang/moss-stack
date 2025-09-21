@@ -5,7 +5,10 @@ from app.features.iam.application.user.commands.update_profile import (
     UpdateProfileHandler,
 )
 from app.shared.infrastructure.uow import IUnitOfWork
-from app.features.iam.application.user.commands.upload_avatar import UploadAvatarCommand, UploadAvatarHandler
+from app.features.iam.application.user.commands.upload_avatar import (
+    UploadAvatarCommand,
+    UploadAvatarHandler,
+)
 from app.shared.infrastructure.storage.interface import IFileStorage
 from ..schemas import UserPublic, UserUpdateProfile
 from ..domain.user import User
@@ -35,6 +38,7 @@ async def update_user_me(
     except Exception as e:
         # This can be handled by a global exception middleware
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
 
 @router.put("/me/avatar", response_model=UserPublic)
 async def upload_my_avatar(

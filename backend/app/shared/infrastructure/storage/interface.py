@@ -1,6 +1,7 @@
 import abc
 from fastapi import UploadFile
 
+
 class IFileStorage(abc.ABC):
     @abc.abstractmethod
     async def save(self, file: UploadFile, path: str, filename: str) -> str:

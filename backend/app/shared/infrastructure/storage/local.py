@@ -3,6 +3,7 @@ import aiofiles
 from fastapi import UploadFile
 from .interface import IFileStorage
 
+
 class LocalFileStorage(IFileStorage):
     def __init__(self, base_path: str, base_url: str):
         self.base_path = base_path
@@ -13,7 +14,7 @@ class LocalFileStorage(IFileStorage):
         full_dir = os.path.join(self.base_path, path)
         os.makedirs(full_dir, exist_ok=True)
         full_path = os.path.join(full_dir, filename)
-        
+
         try:
             async with aiofiles.open(full_path, "wb") as f:
                 while content := await file.read(1024 * 1024):  # Read in 1MB chunks
@@ -22,7 +23,7 @@ class LocalFileStorage(IFileStorage):
             await file.close()
 
         relative_path = os.path.join(path, filename)
-        return str(relative_path).replace("\\", "/") # Ensure forward slashes for URLs
+        return str(relative_path).replace("\\", "/")  # Ensure forward slashes for URLs
 
     async def delete(self, file_path: str) -> None:
         if not file_path:

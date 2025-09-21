@@ -66,4 +66,8 @@ app.include_router(
 app.add_middleware(ExceptionHandlingMiddleware)
 app.add_middleware(LoggingContextMiddleware)
 
-app.mount(settings.STATIC_URL, StaticFiles(directory=settings.STATIC_FILES_PATH), name="static")
+app.mount(
+    settings.STATIC_URL,
+    StaticFiles(directory=settings.STATIC_FILES_PATH),
+    name="static",
+)
