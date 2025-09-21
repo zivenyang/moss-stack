@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.web.deps import get_current_active_superuser, get_uow
 from app.shared.infrastructure.uow import IUnitOfWork
