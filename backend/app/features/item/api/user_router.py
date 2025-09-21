@@ -20,7 +20,7 @@ from ..application.user.queries.get_item_list import (
 router = APIRouter()
 
 
-@router.post("/", response_model=ItemPublic, status_code=201)
+@router.post("", response_model=ItemPublic, status_code=201)
 async def create_item(
     item_in: ItemCreate,
     uow: IUnitOfWork = Depends(get_uow),
@@ -31,7 +31,7 @@ async def create_item(
     return await handler.handle(command)
 
 
-@router.get("/", response_model=Paginated[ItemPublic])
+@router.get("", response_model=Paginated[ItemPublic])
 async def read_items(
     pagination: PageParams = Depends(),
     uow: IUnitOfWork = Depends(get_uow),

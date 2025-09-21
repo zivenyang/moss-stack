@@ -26,7 +26,7 @@ from ..application.admin.commands.delete_user import (
 router = APIRouter()
 
 
-@router.get("/", response_model=Paginated[UserInDBAdmin])
+@router.get("", response_model=Paginated[UserInDBAdmin])
 async def read_users_admin(
     pagination: PageParams = Depends(),  # <-- 使用分页依赖
     uow: IUnitOfWork = Depends(get_uow),

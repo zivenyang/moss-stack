@@ -67,6 +67,13 @@ class ItemRepository:
         await self.session.delete(db_item)
         await self.session.commit()
 
+    async def get_by_id_admin(self, item_id: uuid.UUID) -> Optional[Item]:
+        """
+        Gets an item by its ID, without checking for ownership. For admin use only.
+        The `session.get()` method is the most direct way to fetch by primary key.
+        """
+        return await self.session.get(Item, item_id)
+
     async def get_multi_admin_paginated(
         self, skip: int = 0, limit: int = 100
     ) -> Tuple[List[Item], int]:

@@ -27,7 +27,7 @@ from app.features.item.application.admin.queries.get_all_items import (
 router = APIRouter()
 
 
-@router.get("/", response_model=Paginated[ItemPublic])
+@router.get("", response_model=Paginated[ItemPublic])
 async def read_items_admin(
     pagination: PageParams = Depends(),
     uow: IUnitOfWork = Depends(get_uow),
