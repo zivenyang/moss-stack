@@ -8,6 +8,8 @@ from app.features.iam.domain.user import User
 from app.features.iam.infra.user_repository import UserRepository
 from app.shared.infrastructure.db.session import AsyncSessionFactory, get_db_session
 from app.shared.infrastructure.uow import IUnitOfWork, UnitOfWork
+from app.shared.infrastructure.storage.interface import IFileStorage
+from app.shared.infrastructure.storage.local import LocalFileStorage
 
 # This points to our login endpoint
 oauth2_scheme = OAuth2PasswordBearer(
@@ -68,3 +70,8 @@ def get_uow() -> IUnitOfWork:
     FastAPI dependency that provides a Unit of Work instance for a request.
     """
     return UnitOfWork(session_factory=AsyncSessionFactory)
+
+
+def get_file_storage() -> IFileStorage:
+    """Dependency to get a file storage instance."""
+    return LocalFileStorage(base_path=settings.STATIC_FILES_PATH, base_url=settings.STATIC_URL)

@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     # Logging settings
     LOG_FORMAT: str = "json"  # 'json' for production, 'console' for development
 
+    # The local path where static files will be stored
+    STATIC_FILES_PATH: str = "static"
+    # The public URL path to access static files
+    STATIC_URL: str = "/static"
+
     # Load settings from a .env file
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

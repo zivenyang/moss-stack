@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from app.config import settings
 from app.shared.infrastructure.db.session import async_engine
@@ -64,3 +65,5 @@ app.include_router(
 # --- 添加全局中间件 ---
 app.add_middleware(ExceptionHandlingMiddleware)
 app.add_middleware(LoggingContextMiddleware)
+
+app.mount(settings.STATIC_URL, StaticFiles(directory=settings.STATIC_FILES_PATH), name="static")
