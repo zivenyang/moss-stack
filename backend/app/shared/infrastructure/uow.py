@@ -1,7 +1,6 @@
 import abc
 from typing import Self, Type, Dict, TypeVar
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.shared.infrastructure.db.session import AsyncSessionFactory
 
 # Generic TypeVar for repositories
 T = TypeVar("T")

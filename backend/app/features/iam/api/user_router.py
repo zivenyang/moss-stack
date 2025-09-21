@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.web.deps import get_current_active_user, get_uow
-from app.features.iam.application.user.update_profile import UpdateProfileCommand, UpdateProfileHandler
+from app.features.iam.application.user.commands.update_profile import UpdateProfileCommand, UpdateProfileHandler
 from app.shared.infrastructure.uow import IUnitOfWork
 from ..schemas import UserPublic, UserUpdateProfile
 from ..domain.user import User

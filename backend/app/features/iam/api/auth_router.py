@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from app.features.iam.application.auth.register import RegisterUserCommand, RegisterUserHandler
-from app.features.iam.application.auth.login import LoginCommand, LoginHandler
+from app.features.iam.application.auth.commands.register import RegisterUserCommand, RegisterUserHandler
+from app.features.iam.application.auth.commands.login import LoginCommand, LoginHandler
 from app.shared.infrastructure.uow import IUnitOfWork
 from app.shared.web.deps import get_uow
 from ..schemas import Token, UserCreate, UserPublic

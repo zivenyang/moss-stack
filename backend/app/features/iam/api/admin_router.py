@@ -3,13 +3,13 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.web.deps import get_current_active_superuser, get_uow
 from app.shared.infrastructure.uow import IUnitOfWork
-from app.features.iam.application.admin.get_user_list import GetUserListAdminHandler, GetUserListAdminQuery
-from app.features.iam.application.admin.get_user_by_id import GetUserByIdAdminHandler, GetUserByIdAdminQuery
+from app.features.iam.application.admin.queries.get_user_list import GetUserListAdminHandler, GetUserListAdminQuery
+from app.features.iam.application.admin.queries.get_user_by_id import GetUserByIdAdminHandler, GetUserByIdAdminQuery
 from app.shared.application.exceptions import ResourceNotFoundError
 from ..domain.user import User
 from ..schemas import UserInDBAdmin, UserUpdateAdmin, UserPublic
-from ..application.admin.update_user import UpdateUserAdminCommand, UpdateUserAdminHandler
-from ..application.admin.delete_user import DeleteUserAdminCommand, DeleteUserAdminHandler
+from ..application.admin.commands.update_user import UpdateUserAdminCommand, UpdateUserAdminHandler
+from ..application.admin.commands.delete_user import DeleteUserAdminCommand, DeleteUserAdminHandler
 
 router = APIRouter()
 
