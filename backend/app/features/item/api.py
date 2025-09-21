@@ -7,7 +7,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.shared.infrastructure.db.session import get_db_session
 from app.shared.web.deps import get_current_active_user
-from app.features.auth.domain.user import User
+from app.features.iam.domain.user import User
 
 # Import all DTOs and Handlers
 from .domain.item import ItemCreate, ItemPublic, ItemUpdate

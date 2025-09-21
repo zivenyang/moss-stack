@@ -4,9 +4,10 @@ from jose import jwt, JWTError
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.config import settings
-from app.features.auth.domain.user import User
-from app.features.auth.infra.user_repository import UserRepository
-from app.shared.infrastructure.db.session import get_db_session # Assuming get_db_session is in a shared place
+from app.features.iam.domain.user import User
+from app.features.iam.infra.user_repository import UserRepository
+from app.shared.infrastructure.db.session import AsyncSessionFactory, get_db_session
+from app.shared.infrastructure.uow import IUnitOfWork, UnitOfWork
 
 # This points to our login endpoint
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
@@ -42,3 +43,24 @@ async def get_current_active_user(
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+def get_current_active_superuser(
+    current_user: User = Depends(get_current_active_user),
+) -> User:
+    """
+    FastAPI dependency that requires the current user to be an active superuser.
+    It builds upon the `get_current_active_user` dependency.
+    """
+    if not current_user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges",
+        )
+    return current_user
+
+def get_uow() -> IUnitOfWork:
+    """
+    FastAPI dependency that provides a Unit of Work instance for a request.
+    """
+    return UnitOfWork(session_factory=AsyncSessionFactory)
