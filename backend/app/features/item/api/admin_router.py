@@ -3,16 +3,29 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.infrastructure.uow import IUnitOfWork
 from app.shared.web.deps import get_uow, get_current_active_superuser
 from app.features.iam.domain.user import User
-from app.features.item.application.admin.commands.delete_item import DeleteItemAdminCommand, DeleteItemAdminHandler
-from app.features.item.application.admin.commands.update_item import UpdateItemAdminCommand, UpdateItemAdminHandler
+from app.features.item.application.admin.commands.delete_item import (
+    DeleteItemAdminCommand,
+    DeleteItemAdminHandler,
+)
+from app.features.item.application.admin.commands.update_item import (
+    UpdateItemAdminCommand,
+    UpdateItemAdminHandler,
+)
 from app.shared.application.exceptions import ResourceNotFoundError
-from app.features.item.application.admin.queries.get_item_by_id import GetItemByIdAdminHandler, GetItemByIdAdminQuery
+from app.features.item.application.admin.queries.get_item_by_id import (
+    GetItemByIdAdminHandler,
+    GetItemByIdAdminQuery,
+)
 from app.shared.schemas import PageParams, Paginated
 
 from ..schemas import ItemPublic, ItemUpdateAdmin
-from app.features.item.application.admin.queries.get_all_items import GetAllItemsAdminQuery, GetAllItemsAdminHandler
+from app.features.item.application.admin.queries.get_all_items import (
+    GetAllItemsAdminQuery,
+    GetAllItemsAdminHandler,
+)
 
 router = APIRouter()
+
 
 @router.get("/", response_model=Paginated[ItemPublic])
 async def read_items_admin(
@@ -26,6 +39,7 @@ async def read_items_admin(
     query = GetAllItemsAdminQuery(page_params=pagination)
     handler = GetAllItemsAdminHandler(uow)
     return await handler.handle(query)
+
 
 @router.get("/{item_id}", response_model=ItemPublic)
 async def read_item_admin(
@@ -43,6 +57,7 @@ async def read_item_admin(
     except ResourceNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
+
 @router.put("/{item_id}", response_model=ItemPublic)
 async def update_item_admin(
     item_id: uuid.UUID,
@@ -59,6 +74,7 @@ async def update_item_admin(
         return await handler.handle(command)
     except ResourceNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
 
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_item_admin(

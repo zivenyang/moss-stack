@@ -3,16 +3,18 @@
 import uuid
 from sqlmodel import SQLModel, Field
 
+
 class Entity(SQLModel):
     """
     Base class for entities in the domain layer, built upon SQLModel.
-    
+
     Entities have a unique identifier and a lifecycle. Their identity is defined by their ID,
     not their attributes. This base class provides a default UUID identifier.
-    
+
     It also implements equality comparison based on the entity's ID, which is a
     fundamental concept in Domain-Driven Design.
     """
+
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
     def __eq__(self, other: object) -> bool:

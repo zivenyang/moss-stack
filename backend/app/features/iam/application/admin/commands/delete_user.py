@@ -5,9 +5,11 @@ from app.shared.domain.exceptions import BusinessRuleViolationError
 from app.features.iam.infra.user_repository import UserRepository
 from app.shared.infrastructure.uow import IUnitOfWork
 
+
 class DeleteUserAdminCommand(BaseModel):
     user_id_to_delete: uuid.UUID
     current_admin_id: uuid.UUID
+
 
 class DeleteUserAdminHandler:
     def __init__(self, uow: IUnitOfWork):
@@ -22,5 +24,5 @@ class DeleteUserAdminHandler:
             db_user = await repo.get(command.user_id_to_delete)
             if not db_user:
                 raise ResourceNotFoundError("User not found.")
-                
+
             await repo.remove(db_user=db_user)

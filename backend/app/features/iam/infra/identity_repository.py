@@ -5,14 +5,16 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from ..domain.identity import Identity, IdentityProvider
 from .security import get_password_hash
 
+
 class IdentityRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def get_by_provider(self, provider: IdentityProvider, provider_user_id: str) -> Optional[Identity]:
+    async def get_by_provider(
+        self, provider: IdentityProvider, provider_user_id: str
+    ) -> Optional[Identity]:
         statement = select(Identity).where(
-            Identity.provider == provider,
-            Identity.provider_user_id == provider_user_id
+            Identity.provider == provider, Identity.provider_user_id == provider_user_id
         )
         return (await self.session.exec(statement)).first()
 

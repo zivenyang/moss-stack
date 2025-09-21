@@ -4,18 +4,20 @@ from typing import List
 from .entity import Entity
 from .event import DomainEvent
 
+
 class AggregateRoot(Entity):
     """
     Base class for aggregate roots, inheriting from Entity.
-    
+
     An aggregate root is a specific type of entity that acts as an entry point
     to a cluster of associated objects (the "aggregate"). It is the only object
     within the aggregate that external objects are allowed to hold references to.
-    
+
     This class adds the capability to manage and dispatch domain events that occur
     within the aggregate, ensuring that business operations and their resulting
     events are managed transactionally.
     """
+
     _domain_events: List[DomainEvent] = []
 
     @property

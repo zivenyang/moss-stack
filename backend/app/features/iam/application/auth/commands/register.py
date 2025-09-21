@@ -9,8 +9,10 @@ from app.features.iam.infra.identity_repository import IdentityRepository
 # Import DTOs and other necessary components
 from app.features.iam.schemas import UserCreate, UserPublic
 
+
 class RegisterUserCommand(BaseModel):
     user_data: UserCreate
+
 
 class RegisterUserHandler:
     def __init__(self, uow: IUnitOfWork):
@@ -30,10 +32,10 @@ class RegisterUserHandler:
 
             # Create user (adds to session)
             new_user = await user_repo.create(user_in=command.user_data)
-            
+
             # Flush to get the database-generated ID
             await self.uow.session.flush([new_user])
-            
+
             # Create associated identities (adds to session)
             await identity_repo.create_password_identity(
                 user_id=new_user.id,

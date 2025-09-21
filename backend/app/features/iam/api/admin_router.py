@@ -2,20 +2,33 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.web.deps import get_current_active_superuser, get_uow
 from app.shared.infrastructure.uow import IUnitOfWork
-from app.features.iam.application.admin.queries.get_user_list import GetUserListAdminHandler, GetUserListAdminQuery
-from app.features.iam.application.admin.queries.get_user_by_id import GetUserByIdAdminHandler, GetUserByIdAdminQuery
+from app.features.iam.application.admin.queries.get_user_list import (
+    GetUserListAdminHandler,
+    GetUserListAdminQuery,
+)
+from app.features.iam.application.admin.queries.get_user_by_id import (
+    GetUserByIdAdminHandler,
+    GetUserByIdAdminQuery,
+)
 from app.shared.application.exceptions import ResourceNotFoundError
 from app.shared.schemas import PageParams, Paginated
 from ..domain.user import User
 from ..schemas import UserInDBAdmin, UserUpdateAdmin, UserPublic
-from ..application.admin.commands.update_user import UpdateUserAdminCommand, UpdateUserAdminHandler
-from ..application.admin.commands.delete_user import DeleteUserAdminCommand, DeleteUserAdminHandler
+from ..application.admin.commands.update_user import (
+    UpdateUserAdminCommand,
+    UpdateUserAdminHandler,
+)
+from ..application.admin.commands.delete_user import (
+    DeleteUserAdminCommand,
+    DeleteUserAdminHandler,
+)
 
 router = APIRouter()
 
+
 @router.get("/", response_model=Paginated[UserInDBAdmin])
 async def read_users_admin(
-    pagination: PageParams = Depends(), # <-- 使用分页依赖
+    pagination: PageParams = Depends(),  # <-- 使用分页依赖
     uow: IUnitOfWork = Depends(get_uow),
     current_user: User = Depends(get_current_active_superuser),
 ):
@@ -25,6 +38,7 @@ async def read_users_admin(
     query = GetUserListAdminQuery(page_params=pagination)
     handler = GetUserListAdminHandler(uow)
     return await handler.handle(query)
+
 
 @router.get("/{user_id}", response_model=UserInDBAdmin)
 async def read_user_by_id_admin(
@@ -41,6 +55,7 @@ async def read_user_by_id_admin(
         return await handler.handle(query)
     except ResourceNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
 
 @router.put("/{user_id}", response_model=UserPublic)
 async def update_user_admin(

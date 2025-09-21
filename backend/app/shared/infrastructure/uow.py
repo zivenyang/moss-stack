@@ -5,11 +5,13 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 # Generic TypeVar for repositories
 T = TypeVar("T")
 
+
 class IUnitOfWork(abc.ABC):
     """
     Interface for the Unit of Work pattern.
     Defines the contract for managing transactions and providing repositories.
     """
+
     session: AsyncSession
 
     async def __aenter__(self) -> Self:
@@ -17,10 +19,11 @@ class IUnitOfWork(abc.ABC):
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def get_repository(self, repo_type: Type[T]) -> T:
         raise NotImplementedError
+
 
 class UnitOfWork(IUnitOfWork):
     """
@@ -28,6 +31,7 @@ class UnitOfWork(IUnitOfWork):
     for repository instances. It ensures all repositories within a single
     unit of work share the same database session.
     """
+
     def __init__(self, session_factory):
         self._session_factory = session_factory
         self._session: AsyncSession | None = None
@@ -51,7 +55,7 @@ class UnitOfWork(IUnitOfWork):
         Gets a repository instance for the given repository class.
         It lazily instantiates the repository on first access and caches it
         for the lifetime of the unit of work.
-        
+
         :param repo_type: The class of the repository to get (e.g., UserRepository).
         :return: An instance of the requested repository.
         """
@@ -61,6 +65,6 @@ class UnitOfWork(IUnitOfWork):
         if repo_type not in self._repositories:
             # Instantiate the repository class, passing the shared session to it.
             self._repositories[repo_type] = repo_type(self.session)
-        
+
         # We know the type is correct, so we can safely cast it.
         return self._repositories[repo_type]

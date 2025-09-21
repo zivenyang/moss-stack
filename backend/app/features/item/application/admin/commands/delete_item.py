@@ -4,8 +4,10 @@ from app.shared.infrastructure.uow import IUnitOfWork
 from app.shared.application.exceptions import ResourceNotFoundError
 from app.features.item.infra.item_repository import ItemRepository
 
+
 class DeleteItemAdminCommand(BaseModel):
     item_id: uuid.UUID
+
 
 class DeleteItemAdminHandler:
     def __init__(self, uow: IUnitOfWork):
@@ -14,9 +16,9 @@ class DeleteItemAdminHandler:
     async def handle(self, command: DeleteItemAdminCommand) -> None:
         async with self.uow:
             repo = self.uow.get_repository(ItemRepository)
-            
+
             db_item = await repo.get_by_id_admin(item_id=command.item_id)
             if not db_item:
                 raise ResourceNotFoundError("Item not found.")
-                
+
             await repo.remove(db_item=db_item)

@@ -3,15 +3,22 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.infrastructure.uow import IUnitOfWork
 from app.shared.web.deps import get_uow, get_current_active_user
 from app.features.iam.domain.user import User
-from app.features.item.application.user.queries.get_item_by_id import GetItemByIdHandler, GetItemByIdQuery
+from app.features.item.application.user.queries.get_item_by_id import (
+    GetItemByIdHandler,
+    GetItemByIdQuery,
+)
 from app.shared.application.exceptions import ResourceNotFoundError
 from app.shared.schemas import PageParams, Paginated
 
 from ..schemas import ItemCreate, ItemPublic
 from ..application.user.commands.create_item import CreateItemCommand, CreateItemHandler
-from ..application.user.queries.get_item_list import GetItemListQuery, GetItemListHandler
+from ..application.user.queries.get_item_list import (
+    GetItemListQuery,
+    GetItemListHandler,
+)
 
 router = APIRouter()
+
 
 @router.post("/", response_model=ItemPublic, status_code=201)
 async def create_item(
@@ -22,6 +29,7 @@ async def create_item(
     command = CreateItemCommand(item_in=item_in, owner_id=current_user.id)
     handler = CreateItemHandler(uow)
     return await handler.handle(command)
+
 
 @router.get("/", response_model=Paginated[ItemPublic])
 async def read_items(
@@ -35,6 +43,7 @@ async def read_items(
     query = GetItemListQuery(owner_id=current_user.id, page_params=pagination)
     handler = GetItemListHandler(uow)
     return await handler.handle(query)
+
 
 @router.get("/{item_id}", response_model=ItemPublic)
 async def read_item(

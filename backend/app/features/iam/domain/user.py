@@ -7,25 +7,26 @@ from app.shared.domain.exceptions import BusinessRuleViolationError
 if TYPE_CHECKING:
     from .identity import Identity
 
+
 class User(AggregateRoot, table=True):
     """
     Represents the User aggregate root.
     This model holds the user's core profile information and business logic,
     but explicitly DOES NOT contain any authentication credentials like passwords.
     """
+
     # The 'id' is inherited from AggregateRoot -> Entity.
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, nullable=False)
-    
+
     username: str = Field(index=True, unique=True, max_length=50)
     email: str = Field(unique=True, index=True, max_length=100)
     profile_picture_url: Optional[str] = None
-    
+
     is_active: bool = Field(default=True)
     is_superuser: bool = Field(default=False)
 
     identities: List["Identity"] = Relationship(
-        back_populates="user",
-        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+        back_populates="user", sa_relationship_kwargs={"cascade": "all, delete-orphan"}
     )
 
     # --- Business Methods ---

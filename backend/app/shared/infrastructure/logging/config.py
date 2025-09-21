@@ -3,6 +3,7 @@ import sys
 import structlog
 from app.config import settings
 
+
 def setup_logging():
     """
     Set up structured logging for the application.
@@ -15,7 +16,7 @@ def setup_logging():
     logging.basicConfig(
         format="%(message)s",
         stream=sys.stdout,
-        level=logging.INFO, # 设置一个基础级别
+        level=logging.INFO,  # 设置一个基础级别
     )
 
     # 2. 配置structlog的处理链 (processors)

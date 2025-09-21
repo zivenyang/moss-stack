@@ -10,11 +10,13 @@ from app.shared.infrastructure.db.session import AsyncSessionFactory, get_db_ses
 from app.shared.infrastructure.uow import IUnitOfWork, UnitOfWork
 
 # This points to our login endpoint
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
+)
+
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    session: AsyncSession = Depends(get_db_session)
+    token: str = Depends(oauth2_scheme), session: AsyncSession = Depends(get_db_session)
 ) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -30,12 +32,13 @@ async def get_current_user(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    
+
     repo = UserRepository(session)
     user = await repo.get(user_id)
     if user is None:
         raise credentials_exception
     return user
+
 
 async def get_current_active_user(
     current_user: User = Depends(get_current_user),
@@ -58,6 +61,7 @@ def get_current_active_superuser(
             detail="The user doesn't have enough privileges",
         )
     return current_user
+
 
 def get_uow() -> IUnitOfWork:
     """

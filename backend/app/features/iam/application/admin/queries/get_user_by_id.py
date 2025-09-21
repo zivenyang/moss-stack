@@ -5,8 +5,10 @@ from app.shared.application.exceptions import ResourceNotFoundError
 from app.features.iam.schemas import UserInDBAdmin
 from app.features.iam.infra.user_repository import UserRepository
 
+
 class GetUserByIdAdminQuery(BaseModel):
     user_id: uuid.UUID
+
 
 class GetUserByIdAdminHandler:
     def __init__(self, uow: IUnitOfWork):

@@ -19,6 +19,7 @@ AsyncSessionFactory = async_sessionmaker(
     expire_on_commit=False,
 )
 
+
 # 3. 创建FastAPI依赖项，用于获取DB会话
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionFactory() as session:

@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.shared.web.deps import get_current_active_user, get_uow
-from app.features.iam.application.user.commands.update_profile import UpdateProfileCommand, UpdateProfileHandler
+from app.features.iam.application.user.commands.update_profile import (
+    UpdateProfileCommand,
+    UpdateProfileHandler,
+)
 from app.shared.infrastructure.uow import IUnitOfWork
 from ..schemas import UserPublic, UserUpdateProfile
 from ..domain.user import User
@@ -11,6 +14,7 @@ router = APIRouter()
 @router.get("/me", response_model=UserPublic)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
+
 
 @router.put("/me", response_model=UserPublic)
 async def update_user_me(
