@@ -1,7 +1,6 @@
 import uuid
 from typing import List, Optional, Tuple
 from sqlmodel import select, func
-from sqlalchemy import text
 from sqlmodel.ext.asyncio.session import AsyncSession
 from ..domain.item import Item, ItemCreate, ItemUpdate
 
