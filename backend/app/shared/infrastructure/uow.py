@@ -26,6 +26,10 @@ class IUnitOfWork(abc.ABC):
     @abc.abstractmethod
     def get_repository(self, repo_type: Type[T]) -> T:
         raise NotImplementedError
+    
+    @abc.abstractmethod
+    def track(self, aggregate: AggregateRoot):
+        raise NotImplementedError
 
 
 class UnitOfWork(IUnitOfWork):
