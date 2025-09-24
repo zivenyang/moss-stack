@@ -24,10 +24,7 @@ from app.features.item.application.admin.queries.get_all_items import (
     GetAllItemsAdminHandler,
 )
 
-router = APIRouter(
-    prefix="/admin/items", 
-    tags=["Admin - Items"]
-)
+router = APIRouter(prefix="/admin/items", tags=["Admin - Items"])
 
 
 @router.get("", response_model=Paginated[ItemPublic])

@@ -9,8 +9,14 @@ from app.features.item.application.user.queries.get_item_by_id import (
 )
 from app.shared.application.exceptions import ResourceNotFoundError
 from app.shared.schemas import PageParams, Paginated
-from app.features.item.application.user.commands.update_item import UpdateItemCommand, UpdateItemHandler
-from app.features.item.application.user.commands.delete_item import DeleteItemCommand, DeleteItemHandler
+from app.features.item.application.user.commands.update_item import (
+    UpdateItemCommand,
+    UpdateItemHandler,
+)
+from app.features.item.application.user.commands.delete_item import (
+    DeleteItemCommand,
+    DeleteItemHandler,
+)
 from app.shared.infrastructure.logging.config import get_logger
 
 from ..schemas import ItemCreate, ItemPublic, ItemUpdate
@@ -22,10 +28,7 @@ from ..application.user.queries.get_item_list import (
 
 logger = get_logger(__name__)
 
-router = APIRouter(
-    prefix="/items", 
-    tags=["Items"]
-)
+router = APIRouter(prefix="/items", tags=["Items"])
 
 
 @router.post("", response_model=ItemPublic, status_code=201)
@@ -81,18 +84,22 @@ async def update_item(
     Update an item owned by the current user.
     Only provided fields will be updated.
     """
-    logger.info("--> Entering update_item API endpoint", item_id=str(item_id), user_id=str(current_user.id))
+    logger.info(
+        "--> Entering update_item API endpoint",
+        item_id=str(item_id),
+        user_id=str(current_user.id),
+    )
     logger.debug("Received update data", data=item_in.model_dump())
 
     command = UpdateItemCommand(
-        item_id=item_id,
-        item_in=item_in,
-        owner_id=current_user.id
+        item_id=item_id, item_in=item_in, owner_id=current_user.id
     )
     handler = UpdateItemHandler(uow)
     try:
         updated_item = await handler.handle(command)
-        logger.info("<-- Exiting update_item API endpoint successfully", item_id=str(item_id))
+        logger.info(
+            "<-- Exiting update_item API endpoint successfully", item_id=str(item_id)
+        )
         return updated_item
     except ResourceNotFoundError as e:
         logger.exception("!!! Error in update_item API endpoint", exc_info=e)
@@ -100,6 +107,7 @@ async def update_item(
     except Exception as e:
         logger.exception("!!! Error in update_item API endpoint", exc_info=e)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
 
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_item(
@@ -111,10 +119,7 @@ async def delete_item(
     Delete an item owned by the current user.
     This performs a soft delete.
     """
-    command = DeleteItemCommand(
-        item_id=item_id,
-        owner_id=current_user.id
-    )
+    command = DeleteItemCommand(item_id=item_id, owner_id=current_user.id)
     handler = DeleteItemHandler(uow)
     try:
         await handler.handle(command)

@@ -43,4 +43,3 @@ async def register_user(
         return await handler.handle(command)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
-

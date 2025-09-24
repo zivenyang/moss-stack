@@ -6,9 +6,10 @@ from ..domain.events import UserRegistered
 
 logger = get_logger(__name__)
 
+
 class IamEventHandlers:
     """Container class for IAM event handlers."""
-    
+
     async def send_welcome_email(self, event: UserRegistered):
         """Async event handler to send a welcome email."""
         logger.info(
@@ -20,6 +21,7 @@ class IamEventHandlers:
         # await aiosmtplib.send(...)
         # For now, just a sleep to simulate work
         import asyncio
+
         await asyncio.sleep(2)
-        
+
         logger.info("ASYNC: Welcome email sent successfully.")

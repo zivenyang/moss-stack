@@ -22,12 +22,14 @@ _ROUTERS_TO_WIRE = [
     item_admin_router,
 ]
 
+
 def _wire_dependencies(container: AppContainer, main_module_name: str):
     """
     Wires the container to all modules that use dependency injection.
     """
     # The main module (`main.py`) also needs to be wired for health checks etc.
     container.wire(modules=[main_module_name] + _ROUTERS_TO_WIRE)
+
 
 def _subscribe_event_handlers(container: AppContainer):
     """
@@ -40,16 +42,17 @@ def _subscribe_event_handlers(container: AppContainer):
     #    这些处理器现在是 "ad-hoc" 实例，而不是由容器管理的 provider
     iam_handlers = IamEventHandlers()
     # item_handlers = ItemEventHandlers()
-    
+
     # --- 3. 执行订阅 ---
     event_bus.subscribe(UserRegistered, iam_handlers.send_welcome_email)
     # item_handlers = container.item_event_handlers()
     # event_bus.subscribe(ItemCreated, item_handlers.handle_item_creation)
 
+
 def initialize_dependencies(app: FastAPI, main_module_name: str = "app.main"):
     """
     The main entry point for setting up the application's dependency injection.
-    
+
     - Creates the container.
     - Wires dependencies to modules.
     - Subscribes event handlers.
@@ -58,12 +61,12 @@ def initialize_dependencies(app: FastAPI, main_module_name: str = "app.main"):
     # 1. Create and configure the container
     container = AppContainer()
     container.config.from_dict(settings.model_dump())
-    
+
     # 2. Subscribe event handlers
     _subscribe_event_handlers(container)
-    
+
     # 3. Wire the container to the FastAPI app and its routers
     _wire_dependencies(container, main_module_name)
-    
+
     # 4. Attach the container to the app for access in lifespan, etc.
     app.container = container

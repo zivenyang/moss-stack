@@ -11,6 +11,7 @@ from app.shared.infrastructure.logging.config import get_logger
 EventHandler = Callable[[DomainEvent], Awaitable[None]]
 logger = get_logger(__name__)
 
+
 # --- Interface Definition ---
 class IEventBus(abc.ABC):
     @abc.abstractmethod
@@ -20,25 +21,26 @@ class IEventBus(abc.ABC):
     @abc.abstractmethod
     def subscribe(self, event_type: Type[DomainEvent], handler: EventHandler) -> None:
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     async def run_consumer(self, shutdown_event: asyncio.Event):
         raise NotImplementedError
 
+
 # --- Kafka Implementation ---
 class KafkaEventBus(IEventBus):
     def __init__(self):
-        self._producer_config = {'bootstrap.servers': settings.KAFKA_BOOTSTRAP_SERVERS}
+        self._producer_config = {"bootstrap.servers": settings.KAFKA_BOOTSTRAP_SERVERS}
         self._producer = Producer(self._producer_config)
-        
+
         self._consumer_config = {
-            'bootstrap.servers': settings.KAFKA_BOOTSTRAP_SERVERS,
-            'group.id': settings.KAFKA_CONSUMER_GROUP_ID,
-            'auto.offset.reset': 'earliest',
-            'enable.auto.commit': False,  # Manual commit for at-least-once processing
+            "bootstrap.servers": settings.KAFKA_BOOTSTRAP_SERVERS,
+            "group.id": settings.KAFKA_CONSUMER_GROUP_ID,
+            "auto.offset.reset": "earliest",
+            "enable.auto.commit": False,  # Manual commit for at-least-once processing
         }
         self._consumer: Consumer | None = None
-        
+
         # Internal registries for subscriptions
         self._subscribers: Dict[str, List[EventHandler]] = {}
         self._topic_to_event_class: Dict[str, Type[DomainEvent]] = {}
@@ -50,25 +52,29 @@ class KafkaEventBus(IEventBus):
                 message = event.model_dump_json()
 
                 self._producer.produce(
-                    topic,
-                    value=message.encode('utf-8'),
-                    callback=self._delivery_report
+                    topic, value=message.encode("utf-8"), callback=self._delivery_report
                 )
-            
+
             remaining = self._producer.flush(timeout=5)
             if remaining > 0:
-                logger.warning(f"{remaining} messages failed to flush from Kafka producer queue.")
+                logger.warning(
+                    f"{remaining} messages failed to flush from Kafka producer queue."
+                )
         except BufferError:
             logger.error("Kafka producer's local queue is full.")
         except Exception as e:
-            logger.exception(f"An unexpected error occurred while publishing to Kafka: {e}")
+            logger.exception(
+                f"An unexpected error occurred while publishing to Kafka: {e}"
+            )
 
     @staticmethod
     def _delivery_report(err, msg: Message):
         if err is not None:
             logger.error(f"Message delivery failed for topic '{msg.topic()}': {err}")
         else:
-            logger.info(f"Message delivered to '{msg.topic()}' [partition {msg.partition()}]")
+            logger.info(
+                f"Message delivered to '{msg.topic()}' [partition {msg.partition()}]"
+            )
 
     def subscribe(self, event_type: Type[DomainEvent], handler: EventHandler) -> None:
         """
@@ -78,10 +84,10 @@ class KafkaEventBus(IEventBus):
         topic = event_type.__name__
         if topic not in self._subscribers:
             self._subscribers[topic] = []
-        
+
         self._subscribers[topic].append(handler)
         self._topic_to_event_class[topic] = event_type
-        
+
         logger.info(f"Handler for topic '{topic}' has been registered in memory.")
 
     async def run_consumer(self, shutdown_event: asyncio.Event):
@@ -116,7 +122,7 @@ class KafkaEventBus(IEventBus):
                     continue
 
                 topic = msg.topic()
-                
+
                 try:
                     event_class = self._topic_to_event_class.get(topic)
                     if not event_class:
@@ -124,23 +130,25 @@ class KafkaEventBus(IEventBus):
                         self._consumer.commit(msg, asynchronous=False)
                         continue
 
-                    message_data = json.loads(msg.value().decode('utf-8'))
+                    message_data = json.loads(msg.value().decode("utf-8"))
                     event = event_class.model_validate(message_data)
-                    
-                    logger.info(f"Consumed event from topic '{topic}'", event_id=event.event_id)
-                    
+
+                    logger.info(
+                        f"Consumed event from topic '{topic}'", event_id=event.event_id
+                    )
+
                     if topic in self._subscribers:
                         await asyncio.gather(
                             *(handler(event) for handler in self._subscribers[topic])
                         )
-                    
+
                     self._consumer.commit(msg, asynchronous=False)
 
                 except Exception as e:
                     logger.exception(
                         f"Error processing message from topic '{topic}'",
                         error=e,
-                        raw_message=msg.value().decode('utf-8', errors='ignore')
+                        raw_message=msg.value().decode("utf-8", errors="ignore"),
                     )
         finally:
             logger.info("Closing Kafka consumer...")

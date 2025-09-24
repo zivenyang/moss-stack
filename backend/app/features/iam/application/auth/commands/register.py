@@ -16,7 +16,6 @@ class RegisterUserCommand(BaseModel):
     user_data: UserCreate
 
 
-
 class RegisterUserHandler(ICommandHandler[RegisterUserCommand, UserPublic]):
     def __init__(self, uow: IUnitOfWork):
         self.uow = uow
@@ -38,7 +37,7 @@ class RegisterUserHandler(ICommandHandler[RegisterUserCommand, UserPublic]):
             self.uow.track(new_user)
             user_repo.add(new_user)
             await self.uow.session.flush([new_user])
-            
+
             await identity_repo.create_password_identity(
                 user_id=new_user.id,
                 identifier=email_lower,
@@ -49,5 +48,5 @@ class RegisterUserHandler(ICommandHandler[RegisterUserCommand, UserPublic]):
                 identifier=username_lower,
                 password=command.user_data.password,
             )
-            
+
         return UserPublic.model_validate(new_user)

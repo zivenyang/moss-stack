@@ -71,7 +71,7 @@ class UnitOfWork(IUnitOfWork):
         for aggregate in self._tracked_aggregates:
             events_to_publish.extend(aggregate.domain_events)
             aggregate.clear_domain_events()
-        
+
         if events_to_publish:
             self._event_bus.publish(events_to_publish)
 

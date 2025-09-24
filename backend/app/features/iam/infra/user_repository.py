@@ -25,13 +25,15 @@ class UserRepository:
         """Adds a user to the session, to be committed by UoW."""
         self.session.add(user)
 
-    async def get_multi_paginated(self, skip: int, limit: int) -> Tuple[List[User], int]:
+    async def get_multi_paginated(
+        self, skip: int, limit: int
+    ) -> Tuple[List[User], int]:
         data_statement = select(User).order_by(User.username).offset(skip).limit(limit)
         items = (await self.session.exec(data_statement)).all()
-        
+
         count_statement = select(func.count()).select_from(User)
         total = (await self.session.exec(count_statement)).one()
-        
+
         return items, total
 
     async def create(self, user_in: UserCreate) -> User:

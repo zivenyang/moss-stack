@@ -14,6 +14,7 @@ from dependency_injector.wiring import inject, Provide
 from app.di import AppContainer
 
 from app.shared.infrastructure.logging.config import get_logger
+
 logger = get_logger(__name__)
 
 # This points to our login endpoint
