@@ -6,10 +6,15 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config import settings
 from app.features.iam.domain.user import User
 from app.features.iam.infra.user_repository import UserRepository
-from app.shared.infrastructure.db.session import AsyncSessionFactory, get_db_session
-from app.shared.infrastructure.uow import IUnitOfWork, UnitOfWork
+from app.shared.infrastructure.db.session import get_db_session
+from app.shared.infrastructure.uow import IUnitOfWork
 from app.shared.infrastructure.storage.interface import IFileStorage
 from app.shared.infrastructure.storage.local import LocalFileStorage
+from dependency_injector.wiring import inject, Provide
+from app.di import AppContainer
+
+from app.shared.infrastructure.logging.config import get_logger
+logger = get_logger(__name__)
 
 # This points to our login endpoint
 oauth2_scheme = OAuth2PasswordBearer(
@@ -30,14 +35,17 @@ async def get_current_user(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         user_id = payload.get("sub")
+        logger.debug("Successfully decoded token", user_id=str(user_id))
         if user_id is None:
             raise credentials_exception
-    except JWTError:
+    except (JWTError, ValueError) as e:
+        logger.warning("Token validation failed", error=str(e), token=token)
         raise credentials_exception
 
     repo = UserRepository(session)
     user = await repo.get(user_id)
     if user is None:
+        logger.warning("User not found in DB for a valid token", user_id=str(user_id))
         raise credentials_exception
     return user
 
@@ -65,11 +73,11 @@ def get_current_active_superuser(
     return current_user
 
 
-def get_uow() -> IUnitOfWork:
-    """
-    FastAPI dependency that provides a Unit of Work instance for a request.
-    """
-    return UnitOfWork(session_factory=AsyncSessionFactory)
+@inject
+def get_uow(
+    uow: IUnitOfWork = Depends(Provide[AppContainer.uow]),
+) -> IUnitOfWork:
+    return uow
 
 
 def get_file_storage() -> IFileStorage:

@@ -23,7 +23,10 @@ from ..application.admin.commands.delete_user import (
     DeleteUserAdminHandler,
 )
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/admin/users", 
+    tags=["Admin -  Users"]
+)
 
 
 @router.get("", response_model=Paginated[UserInDBAdmin])

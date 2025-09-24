@@ -9,7 +9,9 @@ from app.shared.infrastructure.uow import IUnitOfWork
 from app.shared.web.deps import get_uow
 from ..schemas import Token, UserCreate, UserPublic
 
-router = APIRouter()
+router = APIRouter(
+    tags=["IAM - Authentication"],
+)
 
 
 @router.post("/login/access-token", response_model=Token)
@@ -40,5 +42,5 @@ async def register_user(
     try:
         return await handler.handle(command)
     except Exception as e:
-        # Let the global exception middleware handle this.
-        raise e
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+

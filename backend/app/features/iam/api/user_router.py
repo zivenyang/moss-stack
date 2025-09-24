@@ -13,7 +13,10 @@ from app.shared.infrastructure.storage.interface import IFileStorage
 from ..schemas import UserPublic, UserUpdateProfile
 from ..domain.user import User
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users",
+    tags=["IAM - User"],
+)
 
 
 @router.get("/me", response_model=UserPublic)

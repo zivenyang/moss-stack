@@ -18,6 +18,8 @@ dependencies = [
     "structlog>=25.4.0",
     "bcrypt>=4.3.0",
     "aiofiles>=24.1.0",
+    "dependency-injector>=4.48.2",
+    "confluent-kafka>=2.11.1",
 ]
 
 [project.optional-dependencies]

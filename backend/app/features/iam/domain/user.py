@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, List, Optional
 from sqlmodel import Field, Relationship
 from app.shared.domain.aggregate_root import AggregateRoot
 from app.shared.domain.exceptions import BusinessRuleViolationError
+from app.features.iam.domain.events import UserRegistered
 
 if TYPE_CHECKING:
     from .identity import Identity
@@ -24,20 +25,29 @@ class User(AggregateRoot, table=True):
 
     is_active: bool = Field(default=True)
     is_superuser: bool = Field(default=False)
+    version: int = Field(default=0)
 
     identities: List["Identity"] = Relationship(
         back_populates="user", sa_relationship_kwargs={"cascade": "all, delete-orphan"}
     )
 
     # --- Business Methods ---
-    def deactivate(self) -> None:
+    @staticmethod
+    def register(username: str, email: str) -> "User":
+        user = User(username=username, email=email, version=1)
+        user._add_domain_event(
+            UserRegistered(user_id=user.id, username=user.username, email=user.email)
+        )
+        return user
+
+    def deactivate(self):
         if not self.is_active:
             raise BusinessRuleViolationError("User is already inactive.")
         self.is_active = False
-        # self._add_domain_event(UserDeactivated(user_id=self.id))
+        # self._add_domain_event(...)
 
-    def activate(self) -> None:
+    def activate(self):
         if self.is_active:
             raise BusinessRuleViolationError("User is already active.")
         self.is_active = True
-        # self._add_domain_event(UserActivated(user_id=self.id))
+        # self._add_domain_event(...)

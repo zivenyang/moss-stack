@@ -19,8 +19,13 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
 
+    # Kafka Settings
+    KAFKA_BOOTSTRAP_SERVERS: str = "localhost:9092"
+    KAFKA_CONSUMER_GROUP_ID: str = "legal_proofreader_group"
+
     # Logging settings
     LOG_FORMAT: str = "json"  # 'json' for production, 'console' for development
+    LOG_LEVEL: str = "DEBUG"
 
     # The local path where static files will be stored
     STATIC_FILES_PATH: str = "static"

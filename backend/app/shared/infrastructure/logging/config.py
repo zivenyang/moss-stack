@@ -16,7 +16,7 @@ def setup_logging():
     logging.basicConfig(
         format="%(message)s",
         stream=sys.stdout,
-        level=logging.INFO,  # 设置一个基础级别
+        level=settings.LOG_LEVEL,  # 设置一个基础级别
     )
 
     # 2. 配置structlog的处理链 (processors)

@@ -2,88 +2,70 @@ import uuid
 from typing import List, Optional, Tuple
 from sqlmodel import select, func
 from sqlmodel.ext.asyncio.session import AsyncSession
-from ..domain.item import Item
-from ..schemas import ItemCreate, ItemUpdate
 
+from app.shared.infrastructure.logging.config import get_logger
+from ..domain.item import Item
+from ..domain.item_event_store import ItemEventStore
+
+logger = get_logger(__name__)
 
 class ItemRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get(self, item_id: uuid.UUID, owner_id: uuid.UUID) -> Optional[Item]:
+        """
+        Gets a single item by its ID, ensuring it belongs to the specified owner.
+        """
+        # 我们不再使用 session.get，因为它只能按主键查询
+        # 我们需要一个带有 WHERE 子句的 select 语句
         statement = select(Item).where(Item.id == item_id, Item.owner_id == owner_id)
         result = await self.session.exec(statement)
         return result.first()
 
-    async def get_multi_by_owner_paginated(
-        self, owner_id: uuid.UUID, offset: int = 0, limit: int = 100
-    ) -> Tuple[List[Item], int]:
+    async def save(self, item: Item) -> None:
         """
-        Gets a paginated list of items for an owner and the total count.
+        Persists the aggregate's state changes.
+        This includes storing new domain events and updating the read projection.
         """
-        # --- Query for the data ---
-        data_statement = (
-            select(Item)
-            .where(Item.owner_id == owner_id)
-            .order_by(Item.id.desc())  # Or another consistent order
-            .offset(offset)
-            .limit(limit)
-        )
+        # 1. Store the new domain events
+        current_version = item.version
+        for event in item.domain_events:
+            event_store_record = ItemEventStore(
+                item_id=item.id,
+                version=current_version + 1,
+                event_type=event.__class__.__name__,
+                event_data=event.model_dump(mode='json', exclude={"item_id"}),
+                occurred_on=event.occurred_on
+            )
+            self.session.add(event_store_record)
+            current_version += 1
+        
+        # 2. Update the version on the projection model
+        item.version = current_version
+        
+        # 3. Add (for new) or merge (for existing) the projection state
+        self.session.add(item)
 
-        # --- Query for the total count ---
-        # We build a separate query for the count for clarity and performance.
-        count_statement = (
-            select(func.count()).select_from(Item).where(Item.owner_id == owner_id)
-        )
 
-        # --- Execute both queries ---
-        # In a real high-performance scenario, one might run these concurrently
-        # with asyncio.gather, but for simplicity, sequential is fine.
-        data_result = await self.session.exec(data_statement)
-        items = data_result.all()
-
-        count_result = await self.session.exec(count_statement)
-        total = count_result.one()
-
-        return items, total
-
-    async def create(self, item_in: ItemCreate, owner_id: uuid.UUID) -> Item:
-        db_item = Item.model_validate(item_in, update={"owner_id": owner_id})
-        self.session.add(db_item)
-        await self.session.commit()
-        await self.session.refresh(db_item)
-        return db_item
-
-    async def update(self, db_item: Item, item_in: ItemUpdate) -> Item:
-        item_data = item_in.model_dump(exclude_unset=True)
-        for key, value in item_data.items():
-            setattr(db_item, key, value)
-        self.session.add(db_item)
-        await self.session.commit()
-        await self.session.refresh(db_item)
-        return db_item
-
-    async def remove(self, db_item: Item) -> None:
-        await self.session.delete(db_item)
-        await self.session.commit()
-
-    async def get_by_id_admin(self, item_id: uuid.UUID) -> Optional[Item]:
-        """
-        Gets an item by its ID, without checking for ownership. For admin use only.
-        The `session.get()` method is the most direct way to fetch by primary key.
-        """
-        return await self.session.get(Item, item_id)
-
-    async def get_multi_admin_paginated(
-        self, skip: int = 0, limit: int = 100
-    ) -> Tuple[List[Item], int]:
-        """
-        Gets a paginated list of all items and the total count.
-        """
-        data_statement = select(Item).order_by(Item.id.desc()).offset(skip).limit(limit)
+    # --- Query methods still read from the fast projection table ---
+    async def get_multi_by_owner_paginated(self, owner_id: uuid.UUID, offset: int, limit: int) -> Tuple[List[Item], int]:
+        data_statement = (select(Item).where(Item.owner_id == owner_id, Item.is_deleted.is_(False))
+                          .order_by(Item.id.desc()).offset(offset).limit(limit))
         items = (await self.session.exec(data_statement)).all()
-
-        count_statement = select(func.count()).select_from(Item)
+        
+        count_statement = select(func.count()).select_from(Item).where(Item.owner_id == owner_id, Item.is_deleted.is_(False))
         total = (await self.session.exec(count_statement)).one()
-
+        
+        return items, total
+        
+    async def get_multi_admin_paginated(self, offset: int, limit: int) -> Tuple[List[Item], int]:
+        # Similar logic, just without the owner_id filter
+        data_statement = (select(Item).where(Item.is_deleted.is_(False))
+                          .order_by(Item.id.desc()).offset(offset).limit(limit))
+        items = (await self.session.exec(data_statement)).all()
+        
+        count_statement = select(func.count()).select_from(Item).where(Item.is_deleted.is_(False))
+        total = (await self.session.exec(count_statement)).one()
+        
         return items, total

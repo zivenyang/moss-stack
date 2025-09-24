@@ -350,6 +350,35 @@ wheels = [
 ]
 
 [[package]]
+name = "confluent-kafka"
+version = "2.11.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/e4/cd2dc58cd583788a362c2d59d179a6537b81c3bf70c6a1907c508117ca77/confluent_kafka-2.11.1.tar.gz", hash = "sha256:a9366d9dc07a527ed0dcef9c24ba38238cf9dc63c3f53b79da15d45ce4459166", size = 227194 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/ed/a3eb9fdd161e87282a2d46b53b05fd4c72db3348bbf364f42a50ef4b2f6e/confluent_kafka-2.11.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d3d5a693c8dbfad16436699434cf0baf82b87c860ec12298d5e06d3a96f38c28", size = 3590829 },
+    { url = "https://files.pythonhosted.org/packages/36/9d/3b5bc0f9335256459faf7471976e206a936084d5e0167c26b1d34fd96acd/confluent_kafka-2.11.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:9763c527b1b4c72415419ea1639b14d4b4fd5c395dc24e2503699c5ad540f62e", size = 3119114 },
+    { url = "https://files.pythonhosted.org/packages/c0/f2/5f4c6a2e1cba27d8be053ce84a1079318f53917dd383301d7fdac9443c91/confluent_kafka-2.11.1-cp310-cp310-manylinux_2_28_aarch64.whl", hash = "sha256:ed5a36c1e550eddb6343e8132d3fe01ce23ecd04e63bf0492fbf9a51c70cabd3", size = 15376626 },
+    { url = "https://files.pythonhosted.org/packages/3a/3d/d55bd27eed5aae2b10ffccd764bc020f1724aa730b00259cc06e37f5467b/confluent_kafka-2.11.1-cp310-cp310-manylinux_2_28_x86_64.whl", hash = "sha256:d2facbdb175f625005f5acdcf0179d758e1c9fe46460593b05345147ee948411", size = 3912524 },
+    { url = "https://files.pythonhosted.org/packages/21/b0/b6918742a37447b708529c890eda9c156f007b403e8e83ebba6883efade8/confluent_kafka-2.11.1-cp310-cp310-win_amd64.whl", hash = "sha256:0b1b7b8cb980a08fa06d982bd452dc488e1635ab05b371039269da411c9d5095", size = 4037866 },
+    { url = "https://files.pythonhosted.org/packages/fb/b4/9a38fefdf81e2071ea802ce806779df347ec6cb0933bf79bfe816286991e/confluent_kafka-2.11.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:407ce01ea64d29aa6dedecd54b775563f10ed5ce97067b37ee68c8e021a489f5", size = 3590320 },
+    { url = "https://files.pythonhosted.org/packages/23/c1/f19b6c673088a53beebb66ccd50a64becfe3baa2d556ace025fef54fb44b/confluent_kafka-2.11.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:bc0fedcc007c32a94cf96bca5075b39b2d38d1f72a88bbc4b81dbdf24ae55663", size = 3118548 },
+    { url = "https://files.pythonhosted.org/packages/23/26/13e7e8ab8093ee3e2820a6b759eaf8c663e7646e23a2ff5f15ec2bce4f33/confluent_kafka-2.11.1-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:be2d13b1b754f85a5c1ccfc60266e2ce108477942b59b72cc07941eb4d671379", size = 15376214 },
+    { url = "https://files.pythonhosted.org/packages/40/aa/ebf3facd881cb0b4e79fae29f040079ff2cb1ae4aabee08456e3ab536828/confluent_kafka-2.11.1-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:61caa7929443ca0bf4ac5c61d37fbc3e77f5fa094adf2337eb62d2742a0b2290", size = 3911998 },
+    { url = "https://files.pythonhosted.org/packages/5e/a0/30a2b36b359d36f4b71cc49522fe5a3ef96a9a59a7df1f3a86f6c758d01b/confluent_kafka-2.11.1-cp311-cp311-win_amd64.whl", hash = "sha256:943b976a1de21176f29efab8d86f3cc3460ee8017d6ff3d471d4a0dac3551d85", size = 4037867 },
+    { url = "https://files.pythonhosted.org/packages/8a/c5/708f138c14f2b3a6f47485c632be8207e896912e5001f2ef048db5c41c2e/confluent_kafka-2.11.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:2c8e2e2d26ac58037d710f49c0ced0db5af88bc4e7714e65310a6855de3f7f73", size = 3596299 },
+    { url = "https://files.pythonhosted.org/packages/25/7e/93e0c618e5abc2df9e9c8e512fb264fe60144e12f32f03f79d98ae46c736/confluent_kafka-2.11.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:44bc1bfcfb71ca0f5ab71312a8735678b3132e8f89fbed70285aaf1b5234e4f3", size = 3123982 },
+    { url = "https://files.pythonhosted.org/packages/03/eb/9e0b3cb9914e7ad112caa4edddf19e342f704631e6808a1c97f93b024c1c/confluent_kafka-2.11.1-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:bc6842dc30ef258e4c5b7c6e322d992cd001b6e319838aa7a6ec210374e16830", size = 15380670 },
+    { url = "https://files.pythonhosted.org/packages/c6/01/f95547a5eeaf5253b299026633b521732eee58a58f9cfe4cc7f602d204f8/confluent_kafka-2.11.1-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:3e01607c3613863fb0f4f86c7fc3421c4af6f70686bf903ab475c113dfacb372", size = 3916459 },
+    { url = "https://files.pythonhosted.org/packages/d1/d4/2a65ada2015364a9791e55697beaddc00a42e2943c5b90e6349da80ede4e/confluent_kafka-2.11.1-cp312-cp312-win_amd64.whl", hash = "sha256:4b4c371090ded6084c893a51e8aba19bc8ae6ce9c019658cb11fab82b3e93458", size = 4038551 },
+    { url = "https://files.pythonhosted.org/packages/52/54/6c790187fce06fb84741f21bf25a9435385a891b8a3b73b4fb5a1bf71d6f/confluent_kafka-2.11.1-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:9618041f031320e113f9dc533c0dbd1d768dd008855ae4be1ed21148442f146e", size = 3128480 },
+    { url = "https://files.pythonhosted.org/packages/d5/40/aa219be95629a1da072996edae96c4db82a72f1e3610cd490f8c9aa57799/confluent_kafka-2.11.1-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:4f8d9dee49975a63b31dd71f0a0b4d3a2af9754a21d18d218fec6c0d9cb6eea3", size = 3599681 },
+    { url = "https://files.pythonhosted.org/packages/ba/0c/29616e188b1c8a1e3fc24a3a9b5d0340591d246ee097706945f89ecb49a2/confluent_kafka-2.11.1-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:e173c3e021bd525c14ea107a960c467d9fc7fe7e7d72cde1308bcddd58774f86", size = 15381089 },
+    { url = "https://files.pythonhosted.org/packages/e8/34/1145c73d4ab35ce71ce8fcc9238a59fddb304de01dbf8a10039ab8ff55ea/confluent_kafka-2.11.1-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:639b7b776dc1d830b0ee4188487c54977fe7d5bf70befbdcf222ac9e1b72ab7e", size = 3916834 },
+    { url = "https://files.pythonhosted.org/packages/af/a3/77a5d2bbd20808ed571844e5de40b3422261824f66a20a5f3e0f44aa1061/confluent_kafka-2.11.1-cp313-cp313-win_amd64.whl", hash = "sha256:09f7703fe54429911f7d1cdf62c3044c4b7eaefa0af9d2dbcf4b513d97673380", size = 4098185 },
+    { url = "https://files.pythonhosted.org/packages/b1/70/8f56755827e9423777571116518127c9b2f357299f082ed386898f63740a/confluent_kafka-2.11.1-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:bc6eceedf0cda75ea666899d972ca9c68b529f1ff36ed99f5f15503d0d08d1b3", size = 15379674 },
+]
+
+[[package]]
 name = "cryptography"
 version = "46.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -412,6 +441,32 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fd/1c/4012edad2a8977ab386c36b6e21f5065974d37afa3eade83a9968cba4855/cryptography-46.0.1-pp311-pypy311_pp73-manylinux_2_34_aarch64.whl", hash = "sha256:15b5fd9358803b0d1cc42505a18d8bca81dabb35b5cfbfea1505092e13a9d96d", size = 4248902 },
     { url = "https://files.pythonhosted.org/packages/58/a3/257cd5ae677302de8fa066fca9de37128f6729d1e63c04dd6a15555dd450/cryptography-46.0.1-pp311-pypy311_pp73-manylinux_2_34_x86_64.whl", hash = "sha256:e34da95e29daf8a71cb2841fd55df0511539a6cdf33e6f77c1e95e44006b9b46", size = 4527150 },
     { url = "https://files.pythonhosted.org/packages/6a/cd/fe6b65e1117ec7631f6be8951d3db076bac3e1b096e3e12710ed071ffc3c/cryptography-46.0.1-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:34f04b7311174469ab3ac2647469743720f8b6c8b046f238e5cb27905695eb2a", size = 3448210 },
+]
+
+[[package]]
+name = "dependency-injector"
+version = "4.48.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e3/a4/619df82de38ce6451cc1acb549237cbd9306c4bfbcec6e8e1fdbceb8c5f3/dependency_injector-4.48.2.tar.gz", hash = "sha256:9ce6089d75a5dd0b6191a243f41d2c2746802bb39550ad431242c15136fefd60", size = 1103335 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/91/56/dce91cc7638a4be4d83e18d20edd3f9b295440b1897d972f7a8ce3ea240f/dependency_injector-4.48.2-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:54d0178be10f17b768afb5c0ed1c5c565abaa2d097b2bc5a529a31c580613df2", size = 1755919 },
+    { url = "https://files.pythonhosted.org/packages/67/80/c29f5cb5fd794ea453b240e6d6682a07cdc519a4bd76589c4b75a1bb7a91/dependency_injector-4.48.2-cp310-abi3-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:12a15979fd534b728b3061c8aa52fd55adb77574758817daae9df8a1c2eb830b", size = 1855277 },
+    { url = "https://files.pythonhosted.org/packages/79/fa/20f14684dfb822f4b72623d4c1250149ba2fcc95a831ae334605eff31b33/dependency_injector-4.48.2-cp310-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:85cdf4b423884d4a24a18b970abe73352fb210761302cd6b5ebc6e9a20dbe53f", size = 1760596 },
+    { url = "https://files.pythonhosted.org/packages/1e/c0/06dddb1b21f64bd1e948244aed1743c8013ea7800fc6e3e470b0019dd93e/dependency_injector-4.48.2-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:a9b457b95a400b7a2de0978a55768cdd104bd265953bf0ed06e7f25d18f35ed2", size = 1742442 },
+    { url = "https://files.pythonhosted.org/packages/63/23/32575e230f5baf8082eb776847756024441207eabbb03ada679c29061070/dependency_injector-4.48.2-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:417809f565c39800adb744d666dfe4d94eae510b73ec33f932d592415d7c46d0", size = 1842421 },
+    { url = "https://files.pythonhosted.org/packages/3c/99/6595e8235d8e120129098d7a56b0491be313bab5415fc9d107ad1ae2a967/dependency_injector-4.48.2-cp310-abi3-win32.whl", hash = "sha256:f014aa7bab427932802d59967d9fe0863a0001db66446177dcc62e47f3a6b234", size = 1512262 },
+    { url = "https://files.pythonhosted.org/packages/96/04/cf1d482d163bf8c7cfd886cb4cf8eed950b366c2723dea2b21874ef2201c/dependency_injector-4.48.2-cp310-abi3-win_amd64.whl", hash = "sha256:e3fcdeb8189f3e1f87fde9276061f8a6cc596c2fa139bc4b4d1f571035ebd645", size = 1640200 },
+    { url = "https://files.pythonhosted.org/packages/2d/92/c0d77e46b4dc3fb69590b25a8b322c823a56eab8f8b91ccffde6b7aac277/dependency_injector-4.48.2-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:f2e3df258cb3ca59f40fffb9c88677cc9dde3f3cdd0f8fc706cf88dad2ac2736", size = 1734990 },
+    { url = "https://files.pythonhosted.org/packages/11/8b/6ae9eeba0238c871a0705e10b026e6d23075dbb0e12e3933717b849a53da/dependency_injector-4.48.2-pp310-pypy310_pp73-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:65d990ca81c8ec213e0b4b10c8e7c46caa69887502e5fc3ced7bcb04ad75ebdf", size = 1825018 },
+    { url = "https://files.pythonhosted.org/packages/c5/2b/32554fa591cdf5434b590e8764765a9c7c329d400c5197c5af00c4711744/dependency_injector-4.48.2-pp310-pypy310_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:f026957ba99997a9566cb846804ec712c67428a8041d93bf2e2966ed4a4d7dfc", size = 1733507 },
+    { url = "https://files.pythonhosted.org/packages/2e/6d/b5972d29961a30cf65a011f7887591b90891023b5b265be4fd69ee1001b7/dependency_injector-4.48.2-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:5e8773d3d2298c4ad446a57168e108dc9e46bdb62a5bc369ca553a14d9d239a1", size = 1621410 },
+    { url = "https://files.pythonhosted.org/packages/fd/1e/2a27d65b34419818a89024413b428f1effd6125e185c4902486796281ff2/dependency_injector-4.48.2-pp311-pypy311_pp73-macosx_11_0_arm64.whl", hash = "sha256:174b117a7a5a28d45c004a3242b28184db12f9818ff4ea8d0cebc230bb5f7b65", size = 1736171 },
+    { url = "https://files.pythonhosted.org/packages/7b/9c/4f55dc60c6dc3f59defd461213b58d90d977c0928e20a98d3d870413db86/dependency_injector-4.48.2-pp311-pypy311_pp73-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:8eed93fa25368be43bc3486bddedcc5ad0a62e0a9a441d060eb80ae7980416b0", size = 1828380 },
+    { url = "https://files.pythonhosted.org/packages/21/e6/16a09fdf0eb368e1c2395979ec9a4bdf7829a57ae3524be491bd5e7f05b4/dependency_injector-4.48.2-pp311-pypy311_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:85368f039e7fbef1d5f38f8ba42eca28b950288dc72aca13534ed4b3e96ee8cf", size = 1736520 },
+    { url = "https://files.pythonhosted.org/packages/7c/2f/41598584075fef9e2bc33c102ba2e0b91ffb207d914b19402d3abf566de8/dependency_injector-4.48.2-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:05ff29398e23a08e840c9a89a0b516d988b337a38534d33791857bd1defd2d23", size = 1623553 },
 ]
 
 [[package]]
@@ -816,6 +871,8 @@ dependencies = [
     { name = "asyncpg" },
     { name = "bcrypt" },
     { name = "celery" },
+    { name = "confluent-kafka" },
+    { name = "dependency-injector" },
     { name = "fastapi", extra = ["standard"] },
     { name = "greenlet" },
     { name = "passlib", extra = ["bcrypt"] },
@@ -847,6 +904,8 @@ requires-dist = [
     { name = "asyncpg" },
     { name = "bcrypt", specifier = ">=4.3.0" },
     { name = "celery" },
+    { name = "confluent-kafka", specifier = ">=2.11.1" },
+    { name = "dependency-injector", specifier = ">=4.48.2" },
     { name = "factory-boy", marker = "extra == 'dev'" },
     { name = "fastapi", extras = ["standard"] },
     { name = "greenlet" },
