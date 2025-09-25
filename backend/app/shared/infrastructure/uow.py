@@ -39,12 +39,22 @@ class UnitOfWork(IUnitOfWork):
     unit of work share the same database session.
     """
 
-    def __init__(self, session_factory, event_bus: IEventBus):
-        self._session_factory = session_factory
+    def __init__(self, session: AsyncSession, event_bus: IEventBus):
+        self.session = session
         self._event_bus = event_bus
-        self._session: AsyncSession | None = None
         self._repositories: Dict[Type, object] = {}
         self._tracked_aggregates: set[AggregateRoot] = set()
+
+    async def __aenter__(self) -> Self:
+        self._repositories = {}
+        self._tracked_aggregates = set()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        # No longer commits or rolls back. This is handled by get_db_session.
+        # It ONLY publishes events if the block was successful (no exception).
+        if not exc_type:
+            await self._publish_events()
 
     def track(self, aggregate: AggregateRoot):
         """
@@ -52,22 +62,6 @@ class UnitOfWork(IUnitOfWork):
         domain events from tracked aggregates upon successful commit.
         """
         self._tracked_aggregates.add(aggregate)
-
-    async def __aenter__(self) -> Self:
-        self.session = self._session_factory()
-        self._repositories = {}
-        self._tracked_aggregates = set()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        if self.session:
-            if exc_type:
-                await self.session.rollback()
-            else:
-                await self.session.commit()
-                # Event publishing is now an integral part of the UoW's responsibility.
-                await self._publish_events()
-            await self.session.close()
 
     async def _publish_events(self):
         """Collects and publishes domain events from all tracked aggregates."""

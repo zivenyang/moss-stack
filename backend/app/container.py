@@ -22,11 +22,3 @@ class AppContainer(containers.DeclarativeContainer):
     # Event Bus: Singleton provider, one instance for the entire app lifecycle.
     event_bus: providers.Singleton[IEventBus] = providers.Singleton(KafkaEventBus)
 
-    session_factory_provider = providers.Object(AsyncSessionFactory)
-
-    # Unit of Work: Factory provider, creates a new UoW instance for each request.
-    uow: providers.Factory[IUnitOfWork] = providers.Factory(
-        UnitOfWork,
-        session_factory=session_factory_provider,
-        event_bus=event_bus,
-    )

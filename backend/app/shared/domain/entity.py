@@ -1,21 +1,16 @@
-# backend/app/shared/domain/entity.py
-
 import uuid
-from sqlmodel import SQLModel, Field
+from pydantic import BaseModel, Field
 
-
-class Entity(SQLModel):
+class Entity(BaseModel):
     """
-    Base class for entities in the domain layer, built upon SQLModel.
-
-    Entities have a unique identifier and a lifecycle. Their identity is defined by their ID,
-    not their attributes. This base class provides a default UUID identifier.
-
-    It also implements equality comparison based on the entity's ID, which is a
-    fundamental concept in Domain-Driven Design.
+    The base class for entities in our pure domain model.
+    Entities are defined by their unique identifier, not their attributes.
     """
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
 
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    # Pydantic v2 config to allow creating from ORM objects in the repository
+    class Config:
+        from_attributes = True
 
     def __eq__(self, other: object) -> bool:
         """

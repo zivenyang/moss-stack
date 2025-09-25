@@ -1,39 +1,38 @@
 import asyncio
-import signal
-from app.di import AppContainer
-from app.shared.infrastructure.logging.config import setup_logging, get_logger
+from app.container import AppContainer
+from app.shared.infrastructure.logging.config import get_logger
 
-
-async def main():
+# --- [新增] ---
+# 将核心消费逻辑封装在一个可被调用的函数中
+async def run_kafka_consumer_in_background(container: AppContainer):
     """
-    Main entry point for the Kafka worker process.
+    Runs the Kafka consumer loop. This function is designed to be called
+    and run as a background task.
     """
-    setup_logging()
     logger = get_logger("kafka_worker")
-
-    # Create the container, which holds our configured event bus and handlers
-    container = AppContainer()
-    container.wire_event_handlers()  # Ensure handlers are subscribed
-
+    
+    # The container already has handlers subscribed from di.py
     event_bus = container.event_bus()
-
-    # Create a shutdown event that can be triggered by signals
+    
     shutdown_event = asyncio.Event()
 
-    def handle_signal(sig, frame):
-        logger.warning(f"Received signal {sig}, initiating graceful shutdown...")
-        shutdown_event.set()
+    # In a background task, we can't easily catch SIGINT/SIGTERM.
+    # Graceful shutdown will be handled by the main app's lifespan.
+    logger.info("Starting Kafka consumer in background...")
+    
+    try:
+        await event_bus.run_consumer(shutdown_event)
+    except asyncio.CancelledError:
+        logger.info("Kafka consumer background task was cancelled.")
+    finally:
+        logger.info("Kafka consumer background task has stopped.")
 
-    signal.signal(signal.SIGINT, handle_signal)
-    signal.signal(signal.SIGTERM, handle_signal)
-
-    logger.info("Starting Kafka worker process...")
-
-    # The run_consumer method is a long-running task
-    await event_bus.run_consumer(shutdown_event)
-
-    logger.info("Kafka worker process has shut down.")
-
+async def main_standalone():
+    """Main entry point for running the worker as a standalone process."""
+    from app.di import initialize_dependencies_for_worker
+    
+    container = initialize_dependencies_for_worker() # A new DI setup for worker
+    await run_kafka_consumer_in_background(container)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main_standalone())

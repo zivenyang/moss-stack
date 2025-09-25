@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timezone
+from sqlalchemy.types import DateTime 
 from typing import Dict, Any
 from sqlmodel import Field, SQLModel, JSON, Column
 
@@ -15,4 +16,6 @@ class ItemEventStore(SQLModel, table=True):
     version: int  # This would be the next field to add for optimistic concurrency
     event_type: str
     event_data: Dict[str, Any] = Field(sa_column=Column(JSON))
-    occurred_on: datetime = Field(default_factory=datetime.now(timezone.utc))
+    occurred_on: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), nullable=False)
+    )

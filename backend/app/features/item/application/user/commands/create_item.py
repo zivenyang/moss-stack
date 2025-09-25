@@ -20,17 +20,21 @@ class CreateItemHandler(ICommandHandler[CreateItemCommand, ItemPublic]):
         async with self.uow:
             repo = self.uow.get_repository(ItemRepository)
 
-            new_item = Item.create(
+            # 1. Execute domain logic to get the new aggregate and events
+            new_item, events = Item.create(
                 item_id=uuid.uuid4(),
                 owner_id=command.owner_id,
                 name=command.item_in.name,
                 description=command.item_in.description,
             )
 
-            # Explicitly track the new aggregate for event publishing
-            self.uow.track(new_item)
+            # 2. Persist the events and the projection
+            await repo.save_events(
+                events=events, item_id=new_item.id, initial_version=0
+            )
+            await repo.save_projection(new_item)
 
-            await repo.save(new_item)
-            # UoW will commit and publish events upon exiting the 'with' block
+            # 3. Add events to UoW for publishing to Kafka
+            self.uow.add_events(events)
 
         return ItemPublic.model_validate(new_item)
